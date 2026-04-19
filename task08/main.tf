@@ -53,12 +53,8 @@ resource "null_resource" "trigger_acr_build" {
     always_run = timestamp()
   }
   provisioner "local-exec" {
-    command = "az acr task run --registry ${local.acr_name} --name ${module.acr.task_name}"
-    
-    # Add this environment block to fix the Windows CLI crash
-    environment = {
-      PYTHONIOENCODING = "utf-8"
-    }
+    # The --no-logs flag stops Windows from trying to print the Docker progress bars!
+    command = "az acr task run --registry ${local.acr_name} --name ${module.acr.task_name} --no-logs"
   }
   depends_on = [module.acr]
 }
