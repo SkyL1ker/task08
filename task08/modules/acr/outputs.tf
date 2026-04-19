@@ -17,3 +17,14 @@ output "build_task_id" {
   description = "The ID of the build task"
   value       = azurerm_container_registry_task.build_task.id
 }
+
+output "admin_username" {
+  description = "The admin username for the Container Registry"
+  value       = azurerm_container_registry.acr.admin_username
+}
+
+output "admin_password" {
+  description = "The admin password for the Container Registry"
+  value       = azurerm_container_registry.acr.admin_password
+  sensitive   = true
+}

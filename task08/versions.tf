@@ -28,3 +28,17 @@ provider "azurerm" {
 }
 
 # Kubernetes providers are configured dynamically in main.tf after AKS cluster creation
+provider "kubectl" {
+  host                   = module.aks.kube_config.0.host
+  client_certificate     = base64decode(module.aks.kube_config.0.client_certificate)
+  client_key             = base64decode(module.aks.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(module.aks.kube_config.0.cluster_ca_certificate)
+  load_config_file       = false
+}
+
+provider "kubernetes" {
+  host                   = module.aks.kube_config.0.host
+  client_certificate     = base64decode(module.aks.kube_config.0.client_certificate)
+  client_key             = base64decode(module.aks.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(module.aks.kube_config.0.cluster_ca_certificate)
+}
