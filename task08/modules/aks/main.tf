@@ -3,13 +3,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = var.name
+  
+  oidc_issuer_enabled = true  # Added to prevent the Azure API update error
 
   default_node_pool {
     name                 = "system"
     node_count           = 1
     vm_size              = "Standard_D2ads_v6"
     os_disk_type         = "Ephemeral"
-    os_disk_size_gb      = 50  # Added to fit the Ephemeral limits!
+    os_disk_size_gb      = 50
   }
 
   identity {

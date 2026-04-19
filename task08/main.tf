@@ -54,6 +54,11 @@ resource "null_resource" "trigger_acr_build" {
   }
   provisioner "local-exec" {
     command = "az acr task run --registry ${local.acr_name} --name ${module.acr.task_name}"
+    
+    # Add this environment block to fix the Windows CLI crash
+    environment = {
+      PYTHONIOENCODING = "utf-8"
+    }
   }
   depends_on = [module.acr]
 }
