@@ -21,11 +21,11 @@ resource "azurerm_container_registry_task" "task" {
     context_access_token = var.git_pat
     image_names          = ["cmtr-j2bdqggt-mod8-app:latest"]
   }
-}
 
-resource "azurerm_container_registry_task_schedule_timer_trigger" "schedule" {
-  name                       = "daily-build"
-  container_registry_task_id = azurerm_container_registry_task.task.id
-  schedule                   = "0 0 * * *"
-  enabled                    = true
+  # The timer_trigger block must be inside the task resource
+  timer_trigger {
+    name     = "daily-build"
+    schedule = "0 0 * * *"
+    enabled  = true
+  }
 }
