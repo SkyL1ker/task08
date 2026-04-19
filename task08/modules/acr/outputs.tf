@@ -1,5 +1,8 @@
-output "id" { value = azurerm_container_registry.acr.id }
-output "login_server" { value = azurerm_container_registry.acr.login_server }
-output "admin_username" { value = azurerm_container_registry.acr.admin_username }
-output "admin_password" { value = azurerm_container_registry.acr.admin_password }
-output "task_name" { value = azurerm_container_registry_task.task.name }
+output "kv_identity_client_id" {
+  value = azurerm_kubernetes_cluster.aks.key_vault_secrets_provider[0].secret_identity[0].client_id
+}
+
+output "kube_config" {
+  value     = azurerm_kubernetes_cluster.aks.kube_config[0]
+  sensitive = true
+}
