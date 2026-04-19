@@ -9,6 +9,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count           = 1
     vm_size              = "Standard_D2ads_v6"
     os_disk_type         = "Ephemeral"
+    os_disk_size_gb      = 50  # Added to fit the Ephemeral limits!
   }
 
   identity {

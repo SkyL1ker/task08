@@ -16,8 +16,8 @@ resource "azurerm_container_registry_task" "task" {
   }
   
   docker_step {
-    dockerfile_path      = "task08/application/Dockerfile"
-    context_path         = var.git_repo_url
+    dockerfile_path      = "Dockerfile" 
+    context_path         = "${var.git_repo_url}#master:application"
     context_access_token = var.git_pat
     image_names          = ["cmtr-j2bdqggt-mod8-app:latest"]
   }

@@ -92,7 +92,7 @@ resource "kubectl_manifest" "deployment" {
     image_tag        = "latest"
   })
   depends_on = [kubectl_manifest.secret_provider, null_resource.trigger_acr_build]
-  
+
   wait_for {
     field {
       key   = "status.availableReplicas"
