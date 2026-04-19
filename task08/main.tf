@@ -120,7 +120,7 @@ resource "kubernetes_service_account" "app_sa" {
 
 # Deploy Secret Provider Kubernetes manifest
 resource "kubectl_manifest" "secret_provider" {
-  yaml_body = templatefile("${path.module}/k8s_manifest/secret-provider.jaml.tftpl", {
+  yaml_body = templatefile("${path.module}/k8s-manifests/secret-provider.yaml.tftpl", {
     aks_kv_access_identity_id  = module.aks.aks_kv_access_identity_id
     kv_name                    = module.keyvault.keyvault_name
     redis_url_secret_name      = "redis-hostname"
@@ -133,7 +133,7 @@ resource "kubectl_manifest" "secret_provider" {
 
 # Deploy Deployment Kubernetes manifest
 resource "kubectl_manifest" "deployment" {
-  yaml_body = templatefile("${path.module}/k8s_manifest/deployment.yaml.tftpl", {
+  yaml_body = templatefile("${path.module}/k8s-manifests/deployment.yaml.tftpl", {
     acr_login_server = module.acr.acr_login_server
     app_image_name   = var.image_name
     image_tag        = "latest"
@@ -151,7 +151,7 @@ resource "kubectl_manifest" "deployment" {
 
 # Deploy Service Kubernetes manifest
 resource "kubectl_manifest" "service" {
-  yaml_body = file("${path.module}/k8s_manifest/service.yaml")
+  yaml_body = file("${path.module}/k8s-manifests/service.yaml")
 
   wait_for {
     field {
