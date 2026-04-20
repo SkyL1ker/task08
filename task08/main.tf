@@ -1,5 +1,10 @@
 data "azurerm_client_config" "current" {}
 
+resource "time_sleep" "wait_for_lb" {
+  depends_on      = [kubectl_manifest.service]
+  create_duration = "90s"
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = local.rg_name
   location = var.location
@@ -103,6 +108,9 @@ resource "kubectl_manifest" "service" {
 data "kubernetes_service" "app_service" {
   metadata {
     name = "redis-flask-app-service"
+    # Ensure your namespace matches what is in your service.yaml
+    namespace = "default"
   }
-  depends_on = [kubectl_manifest.service]
+  # This is the magic link!
+  depends_on = [time_sleep.wait_for_lb]
 }
