@@ -10,19 +10,18 @@ resource "azurerm_container_registry" "acr" {
 resource "azurerm_container_registry_task" "task" {
   name                  = "build-app-task"
   container_registry_id = azurerm_container_registry.acr.id
-  
+
   platform {
     os = "Linux"
   }
-  
+
   docker_step {
-    dockerfile_path      = "Dockerfile" 
-    
-    # We added task08/ here to match your exact GitHub path!
+    dockerfile_path      = "Dockerfile"
     context_path         = "${var.git_repo_url}#master:task08/application"
-    
     context_access_token = var.git_pat
     image_names          = ["cmtr-j2bdqggt-mod8-app:latest"]
+
+
   }
 
   # The timer_trigger block must be inside the task resource
