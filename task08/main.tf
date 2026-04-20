@@ -47,18 +47,6 @@ module "aks" {
   depends_on          = [module.acr, module.keyvault]
 }
 
-# Explicitly trigger the ACR task to build the image immediately before ACI/AKS pull it
-resource "null_resource" "trigger_acr_build" {
-  triggers = {
-    always_run = timestamp()
-  }
-  provisioner "local-exec" {
-    # The --no-logs flag stops Windows from trying to print the Docker progress bars!
-    command = "az acr task run --registry ${local.acr_name} --name ${module.acr.task_name} --no-logs"
-  }
-  depends_on = [module.acr]
-}
-
 module "aci" {
   source              = "./modules/aci"
   name                = local.aci_name
@@ -70,7 +58,7 @@ module "aci" {
   redis_url           = module.redis.hostname
   redis_pwd           = module.redis.primary_key
   tags                = local.tags
-  depends_on          = [null_resource.trigger_acr_build]
+  # depends_on          = [null_resource.trigger_acr_build]
 }
 
 # --- K8S Manifests ---
@@ -92,7 +80,9 @@ resource "kubectl_manifest" "deployment" {
     app_image_name   = "cmtr-j2bdqggt-mod8-app"
     image_tag        = "latest"
   })
-  depends_on = [kubectl_manifest.secret_provider, null_resource.trigger_acr_build]
+
+  # Removed the null_resource from this list, kept secret_provider!
+  depends_on = [kubectl_manifest.secret_provider]
 
   wait_for {
     field {
