@@ -81,8 +81,11 @@ resource "kubectl_manifest" "deployment" {
     image_tag        = "latest"
   })
 
-  # Removed the null_resource from this list, kept secret_provider!
-  depends_on = [kubectl_manifest.secret_provider]
+  # Tell Terraform to wait for the secrets to actually exist!
+  depends_on = [
+    kubectl_manifest.secret_provider,
+    module.redis
+  ]
 
   wait_for {
     field {
